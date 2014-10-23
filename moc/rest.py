@@ -116,9 +116,15 @@ def request_handler(request):
                 raise MissingArgumentError("The required parameter %r was "
                                            "missing from the form data." %
                                            name)
+        log_args = []
+        for name, value in zip(argnames, positional_args):
+            if name == 'password':
+                log_args.append('*****')
+            else:
+                log_args.append(value)
         logger.debug('Recieved api call %s(%s)',
                      endpoint.__name__,
-                      ', '.join([repr(arg) for arg in positional_args]))
+                      ', '.join([repr(arg) for arg in log_args]))
         body = endpoint(*positional_args)
         if not body:
             body = ""
